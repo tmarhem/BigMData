@@ -5,6 +5,7 @@ import java.util.Vector;
 import tp.stemmer.Stemmer;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 
@@ -43,7 +44,7 @@ public class Demo {
 		
 		
 		for(DocumentInfo document : collection) {
-			myTokens = myTokenizer.tokenize(document.getContent());
+			myTokens = myTokenizer.tokenize(document.getContent().toLowerCase(Locale.forLanguageTag("en")));
 			myTokens = enStopList.filter(myTokens);
 			myTokens = myStemmer.stem(myTokens);
 			myVocabulary.getVocabulary(myTokens);

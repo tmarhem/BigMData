@@ -18,7 +18,6 @@ public class Vocabulary {
 	 */
 	public void getVocabulary(String[] tokens) {
 		for (String token : tokens) {
-			token.toLowerCase();
 			if(!vocabulary.containsKey(token)) {
 				vocabulary.put(token,1);
 			}
