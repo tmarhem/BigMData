@@ -12,7 +12,16 @@ import tp.WordBag;
 import tp2.searchEngine.utils.Stemmer;
 import tp2.searchEngine.utils.StopList;
 import tp2.searchEngine.utils.Tokenizer;
-
+/*
+ * Interpolation 11 points
+ * TODO MODELE ENSEMBLISTE
+ * 				VECTORIEL
+ * 				TF-IDF
+ * 				NO NORM
+ * ZIPF de base
+ * apres stop list
+ * apres stem
+ */
 public class SearchEngineImpl extends SearchEngine {
 
 	private static final String ENSTOP = "data/stopListEnglish.txt";
