@@ -19,9 +19,9 @@ public class Stemmer {
 	public enum StemmerLanguage {
 			DANISH("searchEngine.utils.stemmer.org.tartarus.snowball.ext.danishStemmer"),
 			DUTCH("searchEngine.utils.stemmer.org.tartarus.snowball.ext.dutchStemmer"),
-			ENGLISH("searchEngine.utils.stemmer.org.tartarus.snowball.ext.porterStemmer"),
+			ENGLISH("tp2.searchEngine.utils.stemmer.org.tartarus.snowball.ext.porterStemmer"),
 			FINNISH("searchEngine.utils.stemmer.org.tartarus.snowball.ext.finnishStemmer"),
-			FRENCH("searchEngine.utils.stemmer.org.tartarus.snowball.ext.frenchStemmer"),
+			FRENCH("tp2.searchEngine.utils.stemmer.org.tartarus.snowball.ext.frenchStemmer"),
 			GERMAN("searchEngine.utils.stemmer.org.tartarus.snowball.ext.germanStemmer"), 
 			HUNGARIAN("searchEngine.utils.stemmer.org.tartarus.snowball.ext.hungarianStemmer"), 
 			ITALIAN("searchEngine.utils.stemmer.org.tartarus.snowball.ext.italianStemmer"),

@@ -87,7 +87,7 @@ public class CollectionReader implements ContentHandler {
 		
 		if ( qName.equals( "DOC" ) ) {
 			this.currentDocumentInfo = new DocumentInfo();
-		} else if ( qName.equals( "DOCNO" ) || qName.equals( "TEXT" ) ) {
+		} else if ( qName.equals( "DOCID" ) || qName.equals( "TEXT" ) ) {
 			if ( this.currentDocumentInfo == null ) {
 				throw new SAXException( "Error in XML file format: <" + qName + "> markup found outside of <DOC> markup.");
 			}
@@ -105,7 +105,7 @@ public class CollectionReader implements ContentHandler {
 			this.database.add( this.currentDocumentInfo );
 			this.currentDocumentInfo = null;
 			
-		} else if ( qName.equals( "DOCNO" ) ) {
+		} else if ( qName.equals( "DOCID" ) ) {
 			
 			if ( this.currentDocumentInfo != null ) {
 				this.currentDocumentInfo.setId( Integer.parseInt( this.currentData ) );
