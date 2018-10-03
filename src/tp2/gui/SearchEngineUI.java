@@ -33,7 +33,7 @@ public class SearchEngineUI extends JFrame implements ActionListener, ComponentL
 
 	
 	/* Icon file of the main frame. */
-	private static final String SOFTWARE_LOGO_PATH = "data/telecom-lille-transparent.png";
+	private static final String SOFTWARE_LOGO_PATH = "../../../data/telecom-lille-transparent.png";
 	
 	/* Dimensions of the components of the interface. */
 	private static final int DEFAULT_FRAME_WIDTH = 1200;

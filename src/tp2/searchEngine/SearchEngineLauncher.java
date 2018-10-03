@@ -7,7 +7,7 @@ public class SearchEngineLauncher {
 	public static void main( String[] args ) {
 		
 		//TODO: initialize search engine
-		final SearchEngine se = null;
+		final SearchEngineImpl se = new SearchEngineImpl();
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
