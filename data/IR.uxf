@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2.0">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>77</x>
+      <y>182</y>
+      <w>378</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>searchEngine.utils::CollectionReader
+--
+--
++readDatabaseFile(String databaseFilePath): Vector&lt;DocumentInfo&gt;
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>77</x>
+      <y>28</y>
+      <w>245</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>searchEngine.utils::Stemmer
+--
+--
++Stemmer(StemmerLanguage language): ctor
++stem(String token): String
++stem(String[] tokens): String[]
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>343</x>
+      <y>28</y>
+      <w>175</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>searchEngine.utils::StopList
+--
+--
++StopList(String fileName): ctor
++contains(String term): boolean
++filter(String[] terms): String[]
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>77</x>
+      <y>105</y>
+      <w>322</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>searchEngine.utils::Tokenizer
+--
+--
++Tokenizer(String separators): ctor
++Tokenizer(String separators, boolean regexSeparators): ctor
++tokenize(String text): String[]
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>154</x>
+      <y>392</y>
+      <w>287</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>/searchEngine::SearchEngine/
+--
+--
++getDatabase(): Vector&lt;DocumentInfo&gt;
++setDatabase(Vector&lt;DocumentInfo&gt; database): void
++loadDatabaseFile(String databaseFilePath): void
++indexDatabase(): void
++queryDatabase(String query): Vector&lt;DocumentInfo&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>294</y>
+      <w>182</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>searchEngine::DocumentInfo
+--
+--
++getContent(): String
++setContent(String content): void
++getId(): int
++setId(int id): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>84</x>
+      <y>308</y>
+      <w>203</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>searchEngine::SearchEngineLauncher
+--
+--
++main(String[] args): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>56</x>
+      <y>259</y>
+      <w>483</w>
+      <h>231</h>
+    </coordinates>
+    <panel_attributes>searchEngine
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>56</x>
+      <y>0</y>
+      <w>483</w>
+      <h>231</h>
+    </coordinates>
+    <panel_attributes>searchEngine.utils
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>77</x>
+      <y>623</y>
+      <w>273</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>gui::SearchEngineUI
+--
+--
+
+--
+
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>294</x>
+      <y>532</y>
+      <w>217</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>evaluation::SearchEngineEvaluator
+--
+--
++main(String[] args): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>56</x>
+      <y>588</y>
+      <w>315</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>gui
+--
+bg=orange
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>266</x>
+      <y>504</y>
+      <w>273</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>evaluation
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>434</x>
+      <y>364</y>
+      <w>63</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;110.0;70.0;110.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>217</x>
+      <y>343</y>
+      <w>21</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>413</x>
+      <y>210</y>
+      <w>21</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>399</x>
+      <y>469</y>
+      <w>21</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>112</x>
+      <y>343</y>
+      <w>21</w>
+      <h>294</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;400.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>210</x>
+      <y>469</y>
+      <w>21</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;220.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
