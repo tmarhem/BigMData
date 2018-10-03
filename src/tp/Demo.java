@@ -53,16 +53,16 @@ public class Demo {
 		
 		
 		//Print resultat vocabulaire
-		for(Entry<String,Integer> e : myVocabulary.entrySet()) {
-			System.out.println(e.getKey() +"   :"+ e.getValue());
-		}
-		System.out.println("");
-		System.out.println("taille vocabulaire: " + myVocabulary.getSize());
-		System.out.println("nb occurence mot 'le': "+myVocabulary.getFreq("le"));
-		System.out.println("nb hapax: " + myVocabulary.getHapaxFreq());
-		System.out.println("wordbags number: " + myWordBag.getSize());
-		System.out.println("highest entry: " + myVocabulary.getHighest() + "  :" + myVocabulary.getFreq(myVocabulary.getHighest()));
-
+//		for(Entry<String,Integer> e : myVocabulary.entrySet()) {
+//			System.out.println(e.getKey() +"   :"+ e.getValue());
+//		}
+//		System.out.println("");
+//		System.out.println("taille vocabulaire: " + myVocabulary.getSize());
+//		System.out.println("nb occurence mot 'le': "+myVocabulary.getFreq("le"));
+//		System.out.println("nb hapax: " + myVocabulary.getHapaxFreq());
+//		System.out.println("wordbags number: " + myWordBag.getSize());
+//		System.out.println("highest entry: " + myVocabulary.getHighest() + "  :" + myVocabulary.getFreq(myVocabulary.getHighest()));
+//
 
 		
 		
