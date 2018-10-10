@@ -48,4 +48,8 @@ public class WordBag {
 	public Set<Entry<String,Integer>> entrySet(){
 		return wordBagHash.entrySet();
 	}
+	
+	public boolean isEmpty() {
+		return wordBagHash.isEmpty();
+	}
 }

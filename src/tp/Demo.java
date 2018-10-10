@@ -1,14 +1,10 @@
 package tp;
 
 import java.util.Vector;
-
 import tp.stemmer.Stemmer;
 import tp2.searchEngine.Similarity;
-
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map.Entry;
-
 
 /**
  * Dome: reading and printing a collection
@@ -19,11 +15,15 @@ public class Demo {
 	
 	// File contianing the collection to load
 
+	@SuppressWarnings("unused")
 	private final static String WIKIFR = "data/frwiki_100K.trec";
+	@SuppressWarnings("unused")
 	private final static String WIKIEN = "data/enwiki_100k.trec";
+	@SuppressWarnings("unused")
 	private final static String REUTERS = "data/reuters-21578.trec";
-	
+	@SuppressWarnings("unused")
 	private final static String ENSTOP = "data/stopListEnglish.txt";
+	@SuppressWarnings("unused")
 	private final static String FRSTOP = "data/stopListFrancais.txt";
 	
 	
@@ -60,9 +60,7 @@ public class Demo {
 		WordBag querryWordBag = new WordBag();
 		querryWordBag.addToken("underpressur");
 		
-		//underpressure 16
-		//4354
-		//5515
+		//underpressure 16 - 4354 - 5515
 		
 		double test1 = Similarity.computeSimilarity(querryWordBag, docList.get(16), Similarity.DICE);
 		
