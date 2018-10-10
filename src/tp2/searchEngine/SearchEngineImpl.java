@@ -105,12 +105,17 @@ public class SearchEngineImpl extends SearchEngine {
 	@Override
 	public Vector<DocumentInfo> queryDatabase(String query) {
 
+		Vector<DocumentInfo> results = new Vector<DocumentInfo>();
+
+		if(query.equals("")) {
+			System.out.println("Empty query");
+			return results;
+		}
 		myQuery = myTokenizer.tokenize(query.toLowerCase(Locale.forLanguageTag("en")));
 		myQuery = enStopList.filter(myQuery);
 		myQuery = myStemmer.stem(myQuery);
 		queryWordBag = new WordBag(myQuery);
 
-		Vector<DocumentInfo> results = new Vector<DocumentInfo>();
 
 		applicants = new HashSet<Integer>();
 
