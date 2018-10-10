@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 public class WordBag {
-	public static HashMap<String, Integer> wordBagHash;
+	public HashMap<String, Integer> wordBagHash;
 
 	public WordBag() {
 		wordBagHash = new HashMap<String, Integer>();

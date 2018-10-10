@@ -3,6 +3,7 @@ package tp;
 import java.util.Vector;
 
 import tp.stemmer.Stemmer;
+import tp2.searchEngine.Similarity;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -42,30 +43,38 @@ public class Demo {
 
 		String[] myTokens = null; 
 		
+		HashMap<Integer,WordBag> docList = new HashMap<Integer,WordBag>();
 		
+		//corpus
 		for(DocumentInfo document : collection) {
 			myTokens = myTokenizer.tokenize(document.getContent().toLowerCase(Locale.forLanguageTag("en")));
 			myTokens = enStopList.filter(myTokens);
 			myTokens = myStemmer.stem(myTokens);
-			myVocabulary.getVocabulary(myTokens);
-			//myWordBag.addWordBag(document.id, myVocabulary);
+			//myVocabulary.getVocabulary(myTokens);
+			docList.put(document.id, new WordBag(myTokens));
 		}
 		
+		//requete
+		String myQuerry;
+		myQuerry= "underpressure";
+		WordBag querryWordBag = new WordBag();
+		querryWordBag.addToken("underpressur");
 		
-		//Print resultat vocabulaire
-//		for(Entry<String,Integer> e : myVocabulary.entrySet()) {
-//			System.out.println(e.getKey() +"   :"+ e.getValue());
-//		}
-//		System.out.println("");
-//		System.out.println("taille vocabulaire: " + myVocabulary.getSize());
-//		System.out.println("nb occurence mot 'le': "+myVocabulary.getFreq("le"));
-//		System.out.println("nb hapax: " + myVocabulary.getHapaxFreq());
-//		System.out.println("wordbags number: " + myWordBag.getSize());
-//		System.out.println("highest entry: " + myVocabulary.getHighest() + "  :" + myVocabulary.getFreq(myVocabulary.getHighest()));
+		//underpressure 16
+		//4354
+		//5515
+		
+		double test1 = Similarity.computeSimilarity(querryWordBag, docList.get(16), Similarity.DICE);
+		
+		
+//		for(Entry<String, Integer> e2 : docList.get(4354).entrySet()) {
+//			System.out.println(e2.getValue() +" : "+ e2.getKey());
 //
+//		}
+		
+		System.out.println(test1);
+		
 
-		
-		
 		
 	}
 }
