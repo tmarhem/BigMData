@@ -44,6 +44,7 @@ public class SearchEngineImpl extends SearchEngine {
 	HashSet<Integer> applicants;
 
 	WordBag queryWordBag;
+	Similarity mySimilarity;
 
 	public SearchEngineImpl() {
 		this.database = new Vector<DocumentInfo>();
@@ -99,6 +100,7 @@ public class SearchEngineImpl extends SearchEngine {
 		}
 
 		System.out.println("Index generated");
+		mySimilarity = new Similarity(database,invertedIndex);
 
 	}
 
@@ -131,7 +133,7 @@ public class SearchEngineImpl extends SearchEngine {
 
 			System.out.println("taille des applicants a la requete:" + applicants.size());
 
-			results = querrySimilarity(Similarity.DICE);
+			results = querrySimilarity(Similarity.VECTOR);
 
 			return results;
 		}
@@ -161,7 +163,7 @@ public class SearchEngineImpl extends SearchEngine {
 		} else {
 
 			for (Integer i : applicants) {
-				temp = Similarity.computeSimilarity(queryWordBag, index.get(i), similarityType);
+				temp = mySimilarity.computeSimilarity(queryWordBag, index.get(i), similarityType);
 				preResults.put(temp, i);
 			}
 			// ICI, tous les resulats pour la requete sont ordonnés par pertinence dans le

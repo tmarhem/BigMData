@@ -55,14 +55,14 @@ public class Demo {
 		}
 		
 		//requete
-		String myQuerry;
-		myQuerry= "underpressure";
 		WordBag querryWordBag = new WordBag();
 		querryWordBag.addToken("underpressur");
+		querryWordBag.addToken("and");
+
 		
 		//underpressure 16 - 4354 - 5515
 		
-		double test1 = Similarity.computeSimilarity(querryWordBag, docList.get(16), Similarity.DICE);
+		//double test1 = mySimilarity.computeSimilarity(querryWordBag, docList.get(4354), Similarity.VECTOR);
 		
 		
 //		for(Entry<String, Integer> e2 : docList.get(4354).entrySet()) {
@@ -70,7 +70,7 @@ public class Demo {
 //
 //		}
 		
-		System.out.println(test1);
+		//System.out.println(test1);
 		
 
 		
