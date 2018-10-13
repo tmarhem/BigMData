@@ -101,6 +101,29 @@ public class Similarity {
 
 			result = (numerator / ((Math.sqrt(denomQuery)) * (Math.sqrt(denomApplicant))));
 			return result;
+			
+			// VECTOR IDF MODEL NO NORM
+					case 3:
+						numerator = 0;
+						denomApplicant = 0;
+						denomQuery = 0;
+						result = 0;
+						double idfnonorm = 0;
+
+						for (Entry<String, Integer> e : querry.entrySet()) {
+
+							for (Entry<String, Integer> e2 : applicant.entrySet()) {
+								denomQuery += Math.pow((double) e.getValue(), 2.0);
+								denomApplicant += Math.pow((double) e2.getValue(), 2.0);
+
+								if (e.getKey().equals(e2.getKey())) {
+									idf = Math.log(dbSize/(invertedIndex.get(e.getKey()).size()));
+									numerator += (((double) e.getValue() * (double) e2.getValue())*idfnonorm);
+								}
+							}
+						}
+
+						return numerator;
 
 		default:
 			return 0.0;

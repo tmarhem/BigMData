@@ -84,11 +84,11 @@ public class SearchEngineImpl extends SearchEngine {
 			index.put(document.id-1, new WordBag(myTokens));
 
 			// Inverted Index
-			for (Entry<String, Integer> e : index.get(document.id).entrySet()) {
+			for (Entry<String, Integer> e : index.get(document.id-1).entrySet()) {
 				if (!invertedIndex.containsKey(e.getKey())) {
 					invertedIndex.put(e.getKey(), new ArrayList<Integer>());
 				} else {
-					invertedIndex.get(e.getKey()).add(document.id);
+					invertedIndex.get(e.getKey()).add(document.id-1);
 				}
 			}
 			percentageDone = (corpusPosition / corpusSize) * 100;
