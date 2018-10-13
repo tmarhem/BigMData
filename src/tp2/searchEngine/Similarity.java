@@ -93,7 +93,11 @@ public class Similarity {
 					denomApplicant += Math.pow((double) e2.getValue(), 2.0);
 
 					if (e.getKey().equals(e2.getKey())) {
-						idf = Math.log(dbSize/(invertedIndex.get(e.getKey()).size()));
+						if(invertedIndex.get(e.getKey()).size()!=0) {
+							idf = Math.log(dbSize/(invertedIndex.get(e.getKey()).size()));
+						} else {
+							idf = 1;
+						}
 						numerator += (((double) e.getValue() * (double) e2.getValue())*idf);
 					}
 				}
@@ -117,7 +121,11 @@ public class Similarity {
 								denomApplicant += Math.pow((double) e2.getValue(), 2.0);
 
 								if (e.getKey().equals(e2.getKey())) {
-									idf = Math.log(dbSize/(invertedIndex.get(e.getKey()).size()));
+									if(invertedIndex.get(e.getKey()).size()!=0) {
+										idf = Math.log(dbSize/(invertedIndex.get(e.getKey()).size()));
+									} else {
+										idf = 1;
+									}
 									numerator += (((double) e.getValue() * (double) e2.getValue())*idfnonorm);
 								}
 							}

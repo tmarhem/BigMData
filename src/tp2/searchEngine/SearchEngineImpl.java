@@ -32,6 +32,7 @@ public class SearchEngineImpl extends SearchEngine {
 	private static final String ENSTOP = "data/stopListEnglish.txt";
 
 	String regex;
+	int similarityType;
 	String[] myTokens, myQuery;
 	Tokenizer myTokenizer;
 	StopList enStopList;
@@ -45,8 +46,9 @@ public class SearchEngineImpl extends SearchEngine {
 
 	WordBag queryWordBag;
 	Similarity mySimilarity;
-
+	
 	public SearchEngineImpl() {
+		similarityType = Similarity.DICE;
 		this.database = new Vector<DocumentInfo>();
 
 		regex = " ,.;:()'\"<>";
@@ -62,6 +64,7 @@ public class SearchEngineImpl extends SearchEngine {
 
 		queryWordBag = null;
 	}
+
 
 	@Override
 	public void indexDatabase() {
@@ -133,25 +136,19 @@ public class SearchEngineImpl extends SearchEngine {
 
 			System.out.println("taille des applicants a la requete:" + applicants.size());
 
-			results = querrySimilarity(Similarity.VECTORIDF);
+			results = querrySimilarity();
 
 			return results;
 		}
 	}
 
-	/*
-	 * DESCRIPTION Process the text through the tokenizer, stoplist, stemmer and put
-	 * in wordbag INPUT String[] : querry entedred by the user OUTPUT void
-	 */
-	private void processString(String query) {
-	}
 
 	/*
 	 * DESCRIPTION Test the querry through the corpus and give backs pertinence
 	 * ordonated results INPUT SimilarityType DICE or other, see Similarity.java
 	 * OUTPUT ordonated DocumentInfo Vector by pertinence
 	 */
-	public Vector<DocumentInfo> querrySimilarity(Integer similarityType) {
+	public Vector<DocumentInfo> querrySimilarity() {
 
 		Vector<DocumentInfo> results = new Vector<DocumentInfo>();
 		TreeMap<Double, Integer> preResults = new TreeMap<Double, Integer>();
@@ -171,7 +168,7 @@ public class SearchEngineImpl extends SearchEngine {
 
 			for (Entry<Double, Integer> e : preResults.entrySet()) {
 				results.add(database.get(e.getValue()));
-				System.out.println(e.getValue() + " has pertinence score of " + e.getKey());
+				//System.out.println(e.getValue() + " has pertinence score of " + e.getKey());
 			}
 
 			// Reversing the collection in adequation with the UI display
@@ -180,4 +177,15 @@ public class SearchEngineImpl extends SearchEngine {
 		}
 	}
 
+
+	public int getSimilarityType() {
+		return similarityType;
+	}
+
+
+	public void setSimilarityType(int similarityType) {
+		this.similarityType = similarityType;
+	}
+
+	
 }
