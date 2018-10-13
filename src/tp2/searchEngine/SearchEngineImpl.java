@@ -81,7 +81,7 @@ public class SearchEngineImpl extends SearchEngine {
 
 			myVocabulary.getVocabulary(myTokens);
 
-			index.put(document.id, new WordBag(myTokens));
+			index.put(document.id-1, new WordBag(myTokens));
 
 			// Inverted Index
 			for (Entry<String, Integer> e : index.get(document.id).entrySet()) {
@@ -133,7 +133,7 @@ public class SearchEngineImpl extends SearchEngine {
 
 			System.out.println("taille des applicants a la requete:" + applicants.size());
 
-			results = querrySimilarity(Similarity.VECTOR);
+			results = querrySimilarity(Similarity.VECTORIDF);
 
 			return results;
 		}

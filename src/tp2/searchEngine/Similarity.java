@@ -8,14 +8,12 @@ import java.util.Vector;
 import tp.WordBag;
 
 public class Similarity {
-	
-	
 
 	public final static Integer DICE = 0;
 	public final static Integer VECTOR = 1;
 	public final static Integer VECTORIDF = 2;
 	public final static Integer VECTORIDF_NONORM = 3;
-	
+
 	int dbSize;
 	HashMap<String, ArrayList<Integer>> invertedIndex;
 
@@ -24,19 +22,16 @@ public class Similarity {
 		this.invertedIndex = invertedIndex;
 	}
 
-	
 	public double computeIdf(String term) {
-		
+
 		return 0.0;
 	}
+
 	public double computeSimilarity(WordBag querry, WordBag applicant, Integer similarityType) {
-		
 
 		double result = 0;
-		double numerator, denomQuery , denomApplicant;
+		double numerator, denomQuery, denomApplicant;
 
-
-		
 		switch (similarityType) {
 
 		// AGGREGATION MODEL -- DICE
@@ -54,61 +49,59 @@ public class Similarity {
 				}
 			}
 
-			result =((2 * commonWordsCounter) / ((double)querry.getSize() + (double)applicant.getSize()));
+			result = ((2 * commonWordsCounter) / ((double) querry.getSize() + (double) applicant.getSize()));
 
 			return result;
 
-		//VECTOR MODEL
-		case 1 :
+		// VECTOR MODEL
+		case 1:
 			numerator = 0;
 			denomApplicant = 0;
 			denomQuery = 0;
 			result = 0;
-			//numerator, if mot commun, += produit de leur freq respectives
-			//denomQuery sqrt sommE des carrés des fréquences non nulles
-			//denomApplicant sqrt sommE des carrés des fréquences non nulle
-			
+			// numerator, if mot commun, += produit de leur freq respectives
+			// denomQuery sqrt sommE des carrés des fréquences non nulles
+			// denomApplicant sqrt sommE des carrés des fréquences non nulle
+
 			for (Entry<String, Integer> e : querry.entrySet()) {
 
 				for (Entry<String, Integer> e2 : applicant.entrySet()) {
-					denomQuery += Math.pow((double)e.getValue(),2.0);
-					denomApplicant += Math.pow((double)e2.getValue(), 2.0);
-					
+					denomQuery += Math.pow((double) e.getValue(), 2.0);
+					denomApplicant += Math.pow((double) e2.getValue(), 2.0);
+
 					if (e.getKey().equals(e2.getKey())) {
-						numerator += ((double)e.getValue()*(double)e2.getValue());
+						numerator += ((double) e.getValue() * (double) e2.getValue());
 					}
 				}
 			}
-			
-			result = (numerator/((Math.sqrt(denomQuery))*(Math.sqrt(denomApplicant))));
-			return result;
-			
-			//VECTOR MODEL
-					case 2 :
-						numerator = 0;
-						denomApplicant = 0;
-						denomQuery = 0;
-						result = 0;
-						//numerator, if mot commun, += produit de leur freq respectives
-						//denomQuery sqrt sommE des carrés des fréquences non nulles
-						//denomApplicant sqrt sommE des carrés des fréquences non nulle
-						
-						for (Entry<String, Integer> e : querry.entrySet()) {
 
-							for (Entry<String, Integer> e2 : applicant.entrySet()) {
-								denomQuery += Math.pow((double)e.getValue(),2.0);
-								denomApplicant += Math.pow((double)e2.getValue(), 2.0);
-								
-								if (e.getKey().equals(e2.getKey())) {
-									//TODO Add IDF factor to each term freqs multiplication
-									numerator += ((double)e.getValue()*(double)e2.getValue());
-								}
-							}
-						}
-						
-						result = (numerator/((Math.sqrt(denomQuery))*(Math.sqrt(denomApplicant))));
-						return result;
-			
+			result = (numerator / ((Math.sqrt(denomQuery)) * (Math.sqrt(denomApplicant))));
+			return result;
+
+		// VECTOR IDF MODEL
+		case 2:
+			numerator = 0;
+			denomApplicant = 0;
+			denomQuery = 0;
+			result = 0;
+			double idf = 0;
+
+			for (Entry<String, Integer> e : querry.entrySet()) {
+
+				for (Entry<String, Integer> e2 : applicant.entrySet()) {
+					denomQuery += Math.pow((double) e.getValue(), 2.0);
+					denomApplicant += Math.pow((double) e2.getValue(), 2.0);
+
+					if (e.getKey().equals(e2.getKey())) {
+						idf = Math.log(dbSize/(invertedIndex.get(e.getKey()).size()));
+						numerator += (((double) e.getValue() * (double) e2.getValue())*idf);
+					}
+				}
+			}
+
+			result = (numerator / ((Math.sqrt(denomQuery)) * (Math.sqrt(denomApplicant))));
+			return result;
+
 		default:
 			return 0.0;
 
