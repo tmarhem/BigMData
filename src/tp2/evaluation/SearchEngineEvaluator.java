@@ -404,22 +404,19 @@ public class SearchEngineEvaluator {
 		// get arguments
 		String databaseFilePath = "evaluation/cacm/cacm.trec";
 		String queryFile = "evaluation/cacm/cacm.qry";
-		int queryId = Integer.parseInt("1");
+		int queryId = Integer.parseInt("4");
 		String groundTruthFile = "evaluation/cacm/cacm.qrel";
-
 		SearchEngineImpl se = null;
 		SearchEngineEvaluator see = null;
 		Vector<RecallPrecisionPoint> rpps = null;
 		double ap = 0.0;
 		Double[][] apResults = {};
-
 		// INITIALISATION
 		se = new SearchEngineImpl();
-
-		// load database file
-		se.loadDatabaseFile(databaseFilePath);
 		// create evaluator
 		see = new SearchEngineEvaluator(se);
+		// load database file
+		se.loadDatabaseFile(databaseFilePath);
 		// load ground truth file
 		see.readGroundTruthFile(groundTruthFile);
 		// load query file
@@ -480,18 +477,22 @@ public class SearchEngineEvaluator {
 
 		}
 
-		// Create cells
-//LOOP
+		//TODO put points
+///////////////////////////////////
+		
+		
+		
+		
+		
+////////////////////////////////////
 
-		// Resize all columns to fit the content size
-//LOOP
-		sheets.get(CACM).autoSizeColumn(0);
-
+		
+		
+		
 		// Write the output to a file
 		FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
 		workbook.write(fileOut);
 		fileOut.close();
-
 		// Closing the workbook
 		workbook.close();
 
