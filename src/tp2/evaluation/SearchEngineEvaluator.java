@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -26,8 +28,6 @@ import tp2.searchEngine.DocumentInfo;
 import tp2.searchEngine.SearchEngine;
 import tp2.searchEngine.SearchEngineImpl;
 import tp2.searchEngine.Similarity;
-
-
 
 /**
  * A simple search engine evaluator computing (recall, precision) points for a
@@ -381,11 +381,25 @@ public class SearchEngineEvaluator {
 	// Use: java SearchEngineEvaluator database_file query_file query_id
 	// groundtruth_file
 	public static void main(String[] args) throws IOException {
-		
+
 		/*
-		 * Credits to https://www.callicoder.com/java-write-excel-file-apache-poi/
-		 * For the excel outputs
+		 * Credits to https://www.callicoder.com/java-write-excel-file-apache-poi/ For
+		 * the excel outputs
 		 */
+
+		final int CACM = 0;
+		final int CISI = 1;
+		final int CRAN = 2;
+		final int LISA = 3;
+		final int MED = 4;
+		final int TIME = 5;
+
+		final int cacmQryNumber = 64;
+		final int cisiQryNumber = 111;
+		final int cranQryNumber = 365;
+		final int lisaQryNumber = 34;
+		final int medQryNumber = 30;
+		final int timeQryNumber = 82;
 
 		// get arguments
 		String databaseFilePath = "evaluation/cacm/cacm.trec";
@@ -397,8 +411,9 @@ public class SearchEngineEvaluator {
 		SearchEngineEvaluator see = null;
 		Vector<RecallPrecisionPoint> rpps = null;
 		double ap = 0.0;
+		Double[][] apResults = {};
 
-		//INITIALISATION
+		// INITIALISATION
 		se = new SearchEngineImpl();
 
 		// load database file
@@ -410,44 +425,75 @@ public class SearchEngineEvaluator {
 		// load query file
 		see.readQueryFile(queryFile);
 
-		//////////////////////////////////////////DICE
+		////////////////////////////////////////// DICE
 		se.setSimilarityType(Similarity.DICE);
 		rpps = see.evaluateRecallPrecisionPoints(queryId);
 		ap = see.evaluateAveragePrecision(queryId);
 
 		if (rpps != null) {
 			for (RecallPrecisionPoint rpp : rpps) {
-				//System.out.println(rpp);
+				System.out.println(rpp);
 			}
 		} else {
 			System.err.println("Error: no (precision, recall) points could be computed.");
 		}
 
 		System.out.println("Dice Average precision: " + ap);
-		
-		 Workbook workbook = new XSSFWorkbook();        
-		 CreationHelper createHelper = workbook.getCreationHelper();
-	     Sheet sheet = workbook.createSheet("PRECISION RECALL");
-	        Row headerRow = sheet.createRow(0);
-	        
-	        // Create cells
+
+		Workbook workbook = new XSSFWorkbook();
+		CreationHelper createHelper = workbook.getCreationHelper();
+		HashMap<Integer, Sheet> sheets = new HashMap<Integer, Sheet>();
+
+		// XLS different sheets
+		Sheet[] sheetsArray = { workbook.createSheet("CACM"), workbook.createSheet("CISI"),
+				workbook.createSheet("CRAN"), workbook.createSheet("LISA"), workbook.createSheet("MED"),
+				workbook.createSheet("TIME") };
+
+		int i = 0;
+		for (Sheet s : sheetsArray) {
+			sheets.put(i, s);
+			i++;
+		}
+
+		Row headerRow;
+		Cell cell;
+
+		for (Entry<Integer, Sheet> e : sheets.entrySet()) {
+
+			headerRow = sheets.get(e.getKey()).createRow(0);
+			cell = headerRow.createCell(0);
+			cell.setCellValue("QRY NUMBER/Similaity Type");
+			cell = headerRow.createCell(1);
+			cell.setCellValue("DICE");
+			cell = headerRow.createCell(2);
+			cell.setCellValue("VECTOR");
+			cell = headerRow.createCell(3);
+			cell.setCellValue("VECTOR IDF");
+			cell = headerRow.createCell(4);
+			cell.setCellValue("VECTOR IDF NO NORM");
+			
+			sheets.get(e.getKey()).autoSizeColumn(0);
+			sheets.get(e.getKey()).autoSizeColumn(1);
+			sheets.get(e.getKey()).autoSizeColumn(2);
+			sheets.get(e.getKey()).autoSizeColumn(3);
+			sheets.get(e.getKey()).autoSizeColumn(4);
+
+		}
+
+		// Create cells
 //LOOP
-	        Cell cell = headerRow.createCell(0);
-	            cell.setCellValue("VALUE EXAMPLE");
 
-	         // Resize all columns to fit the content size
+		// Resize all columns to fit the content size
 //LOOP
-	            sheet.autoSizeColumn(0);
-	            
-	            // Write the output to a file
-	            FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
-	            workbook.write(fileOut);
-	            fileOut.close();
+		sheets.get(CACM).autoSizeColumn(0);
 
-	            // Closing the workbook
-	            workbook.close();
-	       
+		// Write the output to a file
+		FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
+		workbook.write(fileOut);
+		fileOut.close();
 
+		// Closing the workbook
+		workbook.close();
 
 	}
 
