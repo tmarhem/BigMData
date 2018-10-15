@@ -424,7 +424,7 @@ public class SearchEngineEvaluator {
 
 		////////////////////////////////////////// DICE
 		se.setSimilarityType(Similarity.DICE);
-		rpps = see.evaluateRecallPrecisionPoints(queryId);
+		rpps = see.evaluate11pt(queryId);
 		ap = see.evaluateAveragePrecision(queryId);
 
 		if (rpps != null) {
@@ -440,7 +440,11 @@ public class SearchEngineEvaluator {
 		Workbook workbook = new XSSFWorkbook();
 		CreationHelper createHelper = workbook.getCreationHelper();
 		HashMap<Integer, Sheet> sheets = new HashMap<Integer, Sheet>();
-
+		HashMap<Integer, Row> rows = new HashMap<Integer,Row>();
+		Integer[] numbers = {0, 1, 2, 3, 4, 5};
+		String[] headers = {"Interpolated point/Similaity Type", "Qry ID", "DICE", "VECTOR", "VECTOR IDF", "VECTOR IDF NO NORM"};
+		String [] int11points= {"0.0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9","1"};
+		
 		// XLS different sheets
 		Sheet[] sheetsArray = { workbook.createSheet("CACM"), workbook.createSheet("CISI"),
 				workbook.createSheet("CRAN"), workbook.createSheet("LISA"), workbook.createSheet("MED"),
@@ -452,43 +456,28 @@ public class SearchEngineEvaluator {
 			i++;
 		}
 
-		Row headerRow;
-		Cell cell;
-
+		int i1=0;
 		for (Entry<Integer, Sheet> e : sheets.entrySet()) {
-
-			headerRow = sheets.get(e.getKey()).createRow(0);
-			cell = headerRow.createCell(0);
-			cell.setCellValue("QRY NUMBER/Similaity Type");
-			cell = headerRow.createCell(1);
-			cell.setCellValue("DICE");
-			cell = headerRow.createCell(2);
-			cell.setCellValue("VECTOR");
-			cell = headerRow.createCell(3);
-			cell.setCellValue("VECTOR IDF");
-			cell = headerRow.createCell(4);
-			cell.setCellValue("VECTOR IDF NO NORM");
-			
-			sheets.get(e.getKey()).autoSizeColumn(0);
-			sheets.get(e.getKey()).autoSizeColumn(1);
-			sheets.get(e.getKey()).autoSizeColumn(2);
-			sheets.get(e.getKey()).autoSizeColumn(3);
-			sheets.get(e.getKey()).autoSizeColumn(4);
+			e.getValue().createRow(0);
+			for(String s : int11points) {
+				e.getValue().createRow(i1++).createCell(0).setCellValue(s);
+			}
+			int i2 = 0;
+			for(String s : headers) {
+				e.getValue().getRow(0).createCell(i2).setCellValue(s);
+				e.getValue().autoSizeColumn(i2++);
+			}
 
 		}
 
-		//TODO put points
+		// TODO put points
+		// TODO first compile results from all request into 1 set of point, too complicated
+		// to compile it manually through XLS
+		// TODO WARNING some of the requests answers may be faulty and crush the averages
 ///////////////////////////////////
-		
-		
-		
-		
-		
+
 ////////////////////////////////////
 
-		
-		
-		
 		// Write the output to a file
 		FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
 		workbook.write(fileOut);
