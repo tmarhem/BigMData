@@ -394,96 +394,144 @@ public class SearchEngineEvaluator {
 		final int MED = 4;
 		final int TIME = 5;
 
-		final int cacmQryNumber = 64;
-		final int cisiQryNumber = 111;
-		final int cranQryNumber = 365;
-		final int lisaQryNumber = 34;
-		final int medQryNumber = 30;
-		final int timeQryNumber = 82;
-
 		// get arguments
-		String databaseFilePath = "evaluation/cacm/cacm.trec";
-		String queryFile = "evaluation/cacm/cacm.qry";
-		int queryId = Integer.parseInt("4");
-		String groundTruthFile = "evaluation/cacm/cacm.qrel";
-		SearchEngineImpl se = null;
-		SearchEngineEvaluator see = null;
-		Vector<RecallPrecisionPoint> rpps = null;
+		String fileName = "cacm";
+		HashMap<String, Integer> filesQryNber = new HashMap<String, Integer>();
+		filesQryNber.putIfAbsent("cacm", 64);
+		filesQryNber.putIfAbsent("cisi", 111);
+		filesQryNber.putIfAbsent("cran", 365);
+		filesQryNber.putIfAbsent("lisa", 34);
+		filesQryNber.putIfAbsent("med", 30);
+		filesQryNber.putIfAbsent("time", 82);
+
+		Integer[] similarities = { Similarity.DICE, Similarity.VECTOR, Similarity.VECTORIDF,
+				Similarity.VECTORIDF_NONORM };
+		String databaseFilePath;
+		String queryFile;
+		int queryId;
+		String groundTruthFile;
+		SearchEngineImpl se;
+		SearchEngineEvaluator see;
+		Vector<RecallPrecisionPoint> rpps;
 		double ap = 0.0;
 		Double[][] apResults = {};
-		// INITIALISATION
-		se = new SearchEngineImpl();
-		// create evaluator
-		see = new SearchEngineEvaluator(se);
-		// load database file
-		se.loadDatabaseFile(databaseFilePath);
-		// load ground truth file
-		see.readGroundTruthFile(groundTruthFile);
-		// load query file
-		see.readQueryFile(queryFile);
-
-		////////////////////////////////////////// DICE
-		se.setSimilarityType(Similarity.DICE);
-		rpps = see.evaluate11pt(queryId);
-		ap = see.evaluateAveragePrecision(queryId);
-
-		if (rpps != null) {
-			for (RecallPrecisionPoint rpp : rpps) {
-				System.out.println(rpp);
-			}
-		} else {
-			System.err.println("Error: no (precision, recall) points could be computed.");
-		}
-
-		System.out.println("Dice Average precision: " + ap);
-
-		Workbook workbook = new XSSFWorkbook();
-		CreationHelper createHelper = workbook.getCreationHelper();
-		HashMap<Integer, Sheet> sheets = new HashMap<Integer, Sheet>();
-		HashMap<Integer, Row> rows = new HashMap<Integer,Row>();
-		Integer[] numbers = {0, 1, 2, 3, 4, 5};
-		String[] headers = {"Interpolated point/Similaity Type", "Qry ID", "DICE", "VECTOR", "VECTOR IDF", "VECTOR IDF NO NORM"};
-		String [] int11points= {"0.0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9","1"};
 		
-		// XLS different sheets
-		Sheet[] sheetsArray = { workbook.createSheet("CACM"), workbook.createSheet("CISI"),
-				workbook.createSheet("CRAN"), workbook.createSheet("LISA"), workbook.createSheet("MED"),
-				workbook.createSheet("TIME") };
+		//String[FileName][Similarity][QRY NUMBER][ RPPPOINTS]
+		Double[][][][] result = new Double[10][10][1000][20];
+		int fileNameCtr = 0;
+		int rppCtr = 0;
+		
+		// <FILENAME, <Similarity ,<QRY NUMBER, <RPP Points>>>>
 
-		int i = 0;
-		for (Sheet s : sheetsArray) {
-			sheets.put(i, s);
-			i++;
-		}
 
-		int i1=0;
-		for (Entry<Integer, Sheet> e : sheets.entrySet()) {
-			e.getValue().createRow(0);
-			for(String s : int11points) {
-				e.getValue().createRow(i1++).createCell(0).setCellValue(s);
-			}
-			int i2 = 0;
-			for(String s : headers) {
-				e.getValue().getRow(0).createCell(i2).setCellValue(s);
-				e.getValue().autoSizeColumn(i2++);
-			}
+		// EXCELL
+		/*
+		 * Workbook workbook = new XSSFWorkbook(); CreationHelper createHelper =
+		 * workbook.getCreationHelper(); HashMap<Integer, Sheet> sheets = new
+		 * HashMap<Integer, Sheet>(); HashMap<Integer, Row> rows = new
+		 * HashMap<Integer,Row>(); Integer[] numbers = {0, 1, 2, 3, 4, 5}; String[]
+		 * headers = {"Interpolated point/Similaity Type", "Qry ID", "DICE", "VECTOR",
+		 * "VECTOR IDF", "VECTOR IDF NO NORM"}; String [] int11points=
+		 * {"0.0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9","1"};
+		 * 
+		 * // XLS different sheets Sheet[] sheetsArray = { workbook.createSheet("CACM"),
+		 * workbook.createSheet("CISI"), workbook.createSheet("CRAN"),
+		 * workbook.createSheet("LISA"), workbook.createSheet("MED"),
+		 * workbook.createSheet("TIME") };
+		 */
 
-		}
+		// HEARDERS
+		/*
+		 * int i = 0; for (Sheet s : sheetsArray) { sheets.put(i, s); i++; }
+		 * 
+		 * int i1=0; for (Entry<Integer, Sheet> e : sheets.entrySet()) {
+		 * e.getValue().createRow(0); for(String s : int11points) {
+		 * e.getValue().createRow(i1++).createCell(0).setCellValue(s); } int i2 = 0;
+		 * for(String s : headers) {
+		 * e.getValue().getRow(0).createCell(i2).setCellValue(s);
+		 * e.getValue().autoSizeColumn(i2++); }
+		 * 
+		 * }
+		 */
 
 		// TODO put points
-		// TODO first compile results from all request into 1 set of point, too complicated
+		// TODO first compile results from all request into 1 set of point, too
+		// complicated
 		// to compile it manually through XLS
-		// TODO WARNING some of the requests answers may be faulty and crush the averages
+		// TODO WARNING some of the requests answers may be faulty and crush the
+		// averages
 ///////////////////////////////////
 
+		// Interpolated point - Similarity value
+		HashMap<Integer, Double> elevenPointToSimilarity = new HashMap<Integer, Double>();
+
+//FOR EACH FILE
+		for (Entry<String, Integer> e : filesQryNber.entrySet()) {
+
+			// INITIALIZING FILE
+			databaseFilePath = "evaluation/" + fileName + "/" + fileName + ".trec";
+			queryFile = "evaluation/" + fileName + "/" + fileName + ".qry";
+			queryId = Integer.parseInt("4");
+			groundTruthFile = "evaluation/" + fileName + "/" + fileName + ".qrel";
+			se = null;
+			see = null;
+			rpps = null;
+			ap = 0.0;
+			// apResults = {};
+			se = new SearchEngineImpl();
+			see = new SearchEngineEvaluator(se);
+			se.loadDatabaseFile(databaseFilePath);
+			see.readGroundTruthFile(groundTruthFile);
+			see.readQueryFile(queryFile);
+
+			// FOR EACH SIMILARITY
+			for (Integer similarity : similarities) {
+				se.setSimilarityType(similarity);
+				
+				// FOR EACH QRY
+				for (int iQry = 1; iQry < (int) e.getValue(); iQry++) {
+					rpps = see.evaluate11pt(iQry);
+					for(rppCtr = 0; rppCtr<10 ; rppCtr++) {
+						// TODO CHECK FOR NULL
+						if(see.evaluate11pt(iQry)!=null) {
+							if(!see.evaluate11pt(iQry).isEmpty()) {
+								result[fileNameCtr][similarity][iQry][rppCtr]= see.evaluate11pt(iQry).get(rppCtr).recall/see.evaluate11pt(iQry).get(rppCtr).precision;
+							}
+						}
+					}
+					
+					//CONSOLE OUTPUT
+/*					if (rpps != null) {
+						for (RecallPrecisionPoint rpp : rpps) {
+							System.out.println(rpp);
+						}
+					} else {
+						System.err.println("Error: no (precision, recall) points could be computed.");
+					}
+
+					System.out.println("Dice Average precision: " + ap);*/
+				}
+			}
+		}
+		
+for(Double[][][] d:result) {
+	for(Double[][] d1:d) {
+		for(Double[] d2 : d1) {
+			for(Double d3:d2) {
+				
+			}
+		}
+	}
+	
+}
 ////////////////////////////////////
 
-		// Write the output to a file
-		FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
-		workbook.write(fileOut);
-		fileOut.close();
-		// Closing the workbook
-		workbook.close();
+//EXCELL OUTPUT
+		/*
+		 * // Write the output to a file FileOutputStream fileOut = new
+		 * FileOutputStream("poi-generated-file.xlsx"); workbook.write(fileOut);
+		 * fileOut.close(); // Closing the workbook workbook.close();
+		 */
 
 	}
 
