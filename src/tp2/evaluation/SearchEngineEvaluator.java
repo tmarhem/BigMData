@@ -387,15 +387,6 @@ public class SearchEngineEvaluator {
 		 * the excel outputs
 		 */
 
-		final int CACM = 0;
-		final int CISI = 1;
-		final int CRAN = 2;
-		final int LISA = 3;
-		final int MED = 4;
-		final int TIME = 5;
-
-		// get arguments
-		String fileName = "cacm";
 		HashMap<String, Integer> filesQryNber = new HashMap<String, Integer>();
 		filesQryNber.putIfAbsent("cacm", 64);
 		filesQryNber.putIfAbsent("cisi", 111);
@@ -408,22 +399,15 @@ public class SearchEngineEvaluator {
 				Similarity.VECTORIDF_NONORM };
 		String databaseFilePath;
 		String queryFile;
-		int queryId;
 		String groundTruthFile;
 		SearchEngineImpl se;
 		SearchEngineEvaluator see;
-		Vector<RecallPrecisionPoint> rpps;
-		double ap = 0.0;
-		Double[][] apResults = {};
 		
-		//String[FileName][Similarity][QRY NUMBER][ RPPPOINTS]
-		Double[][][][] result = new Double[10][10][1000][20];
+		//String[FileName][Similarity][QRY NUMBER][ RPPPOINT]
+		Double[][][][] result = new Double[10][10][1000][15];
 		int fileNameCtr = 0;
 		int rppCtr = 0;
 		
-		// <FILENAME, <Similarity ,<QRY NUMBER, <RPP Points>>>>
-
-
 		// EXCELL
 		/*
 		 * Workbook workbook = new XSSFWorkbook(); CreationHelper createHelper =
@@ -454,45 +438,43 @@ public class SearchEngineEvaluator {
 		 * }
 		 */
 
-		// TODO put points
-		// TODO first compile results from all request into 1 set of point, too
-		// complicated
-		// to compile it manually through XLS
+		//TODO Locate where to compile all queries to 1
 		// TODO WARNING some of the requests answers may be faulty and crush the
 		// averages
 ///////////////////////////////////
-
-		// Interpolated point - Similarity value
-		HashMap<Integer, Double> elevenPointToSimilarity = new HashMap<Integer, Double>();
 
 //FOR EACH FILE
 		for (Entry<String, Integer> e : filesQryNber.entrySet()) {
 
 			// INITIALIZING FILE
-			databaseFilePath = "evaluation/" + fileName + "/" + fileName + ".trec";
-			queryFile = "evaluation/" + fileName + "/" + fileName + ".qry";
-			queryId = Integer.parseInt("4");
-			groundTruthFile = "evaluation/" + fileName + "/" + fileName + ".qrel";
+			databaseFilePath = "evaluation/" + e.getKey() + "/" + e.getKey() + ".trec";
+			queryFile = "evaluation/" + e.getKey() + "/" + e.getKey() + ".qry";
+			groundTruthFile = "evaluation/" + e.getKey() + "/" + e.getKey() + ".qrel";
 			se = null;
 			see = null;
-			rpps = null;
-			ap = 0.0;
-			// apResults = {};
 			se = new SearchEngineImpl();
 			see = new SearchEngineEvaluator(se);
 			se.loadDatabaseFile(databaseFilePath);
 			see.readGroundTruthFile(groundTruthFile);
 			see.readQueryFile(queryFile);
+			
+			System.out.println("FILE Entered "+e.getKey());
 
 			// FOR EACH SIMILARITY
 			for (Integer similarity : similarities) {
+				System.out.println("	Similarity Entered "+similarity);
+
+				//Adjust similarity type parameter
 				se.setSimilarityType(similarity);
 				
 				// FOR EACH QRY
-				for (int iQry = 1; iQry < (int) e.getValue(); iQry++) {
-					rpps = see.evaluate11pt(iQry);
-					for(rppCtr = 0; rppCtr<10 ; rppCtr++) {
-						// TODO CHECK FOR NULL
+				for (int iQry = 1; iQry < e.getValue(); iQry++) {
+					System.out.println("		Query Entered "+iQry+" out of "+e.getValue());
+
+					//Calculate similarity
+					for(rppCtr = 0; rppCtr<11 ; rppCtr++) {
+						System.out.println("			RPP Entered "+ rppCtr);
+
 						if(see.evaluate11pt(iQry)!=null) {
 							if(!see.evaluate11pt(iQry).isEmpty()) {
 								result[fileNameCtr][similarity][iQry][rppCtr]= see.evaluate11pt(iQry).get(rppCtr).recall/see.evaluate11pt(iQry).get(rppCtr).precision;
@@ -500,16 +482,8 @@ public class SearchEngineEvaluator {
 						}
 					}
 					
-					//CONSOLE OUTPUT
-/*					if (rpps != null) {
-						for (RecallPrecisionPoint rpp : rpps) {
-							System.out.println(rpp);
-						}
-					} else {
-						System.err.println("Error: no (precision, recall) points could be computed.");
-					}
-
-					System.out.println("Dice Average precision: " + ap);*/
+					//Change l-5 to break two dimensions and assign value here
+					//result[fileNameCtr][similarity] = average<iQry,rppCtr>;
 				}
 			}
 		}
@@ -518,7 +492,7 @@ for(Double[][][] d:result) {
 	for(Double[][] d1:d) {
 		for(Double[] d2 : d1) {
 			for(Double d3:d2) {
-				
+				System.out.println("Looping frenetically on"+d3);
 			}
 		}
 	}

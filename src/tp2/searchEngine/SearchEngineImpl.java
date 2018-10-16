@@ -134,8 +134,6 @@ public class SearchEngineImpl extends SearchEngine {
 				}
 			}
 
-			System.out.println("taille des applicants a la requete:" + applicants.size());
-
 			results = querrySimilarity();
 
 			return results;
