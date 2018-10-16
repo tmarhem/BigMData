@@ -390,10 +390,10 @@ public class SearchEngineEvaluator {
 		HashMap<String, Integer> filesQryNber = new HashMap<String, Integer>();
 		filesQryNber.putIfAbsent("cacm", 64);
 		filesQryNber.putIfAbsent("cisi", 111);
-		filesQryNber.putIfAbsent("cran", 365);
-		filesQryNber.putIfAbsent("lisa", 34);
-		filesQryNber.putIfAbsent("med", 30);
-		filesQryNber.putIfAbsent("time", 82);
+		//filesQryNber.putIfAbsent("cran", 365);
+		//filesQryNber.putIfAbsent("lisa", 34);
+		//filesQryNber.putIfAbsent("med", 30);
+		//filesQryNber.putIfAbsent("time", 82);
 
 		Integer[] similarities = { Similarity.DICE, Similarity.VECTOR, Similarity.VECTORIDF,
 				Similarity.VECTORIDF_NONORM };
@@ -473,7 +473,6 @@ public class SearchEngineEvaluator {
 
 					//Calculate similarity
 					for(rppCtr = 0; rppCtr<11 ; rppCtr++) {
-						System.out.println("			RPP Entered "+ rppCtr);
 
 						if(see.evaluate11pt(iQry)!=null) {
 							if(!see.evaluate11pt(iQry).isEmpty()) {
