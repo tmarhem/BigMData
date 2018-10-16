@@ -389,7 +389,7 @@ public class SearchEngineEvaluator {
 
 		HashMap<String, Integer> filesQryNber = new HashMap<String, Integer>();
 		filesQryNber.putIfAbsent("cacm", 64);
-		filesQryNber.putIfAbsent("cisi", 111);
+		//filesQryNber.putIfAbsent("cisi", 111);
 		//filesQryNber.putIfAbsent("cran", 365);
 		//filesQryNber.putIfAbsent("lisa", 34);
 		//filesQryNber.putIfAbsent("med", 30);
