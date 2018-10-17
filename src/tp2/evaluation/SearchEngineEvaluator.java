@@ -55,7 +55,7 @@ public class SearchEngineEvaluator {
 	 * 
 	 * @author Pierre Tirilly
 	 */
-	private class RecallPrecisionPoint {
+	public class RecallPrecisionPoint {
 		double recall;
 		double precision;
 
@@ -71,7 +71,11 @@ public class SearchEngineEvaluator {
 		}
 
 		public Double result() {
-			return this.recall / this.precision;
+			if(recall==0 || precision==0) {
+				return 0.0;
+			} else {
+				return this.recall / this.precision;
+			}
 		}
 
 		@Override
