@@ -201,7 +201,7 @@ public class GlobalEvaluationAndOutput {
 		 * Create WorkBook For each file For each similarity type Create Sheet
 		 * "File-Similarity type" compute queries average queries output in XLS sheet
 		 * 
-		 * TODO NEED ONE MORE MAP <Similarity, Results>
+		 * TODO REVERSE VECTOR GAUCHE DROITE resultats de 0 à 1 a l'envers
 		 */
 
 		GlobalEvaluationAndOutput mGEAO = new GlobalEvaluationAndOutput();
