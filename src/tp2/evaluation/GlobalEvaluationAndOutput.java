@@ -29,19 +29,18 @@ public class GlobalEvaluationAndOutput {
 	static SearchEngineImpl se;
 	static SearchEngineEvaluator see;
 
-	// String[FileName][Similarity][QRY NUMBER][RPPPOINT]
-	static Double[][][][] result;
 	static HashMap<Integer, Vector<RecallPrecisionPoint>> queriesResults;
-	static HashMap<Integer, Double> averagedQueries;
-	static HashMap<Integer,HashMap<Integer, Double>> similarityResults;
-	static int fileNameCtr;
-	static int rppCtr;
+	static HashMap<Integer, Double> similarityResults;
+	static HashMap<Integer, HashMap<Integer, Double>> fileResults;
 
 	static Workbook wb;
 	static CreationHelper createHelper;
 
 	// HashMap< FILE , SIMILARITY, POINTID, DOUBLE>
 
+	/*
+	 * Constructor with initialization parameters
+	 */
 	public GlobalEvaluationAndOutput() {
 		filesQryNber = new HashMap<String, Integer>();
 		filesQryNber.put("cacm", 64);
@@ -53,41 +52,44 @@ public class GlobalEvaluationAndOutput {
 
 		similarities = new HashMap<String, Integer>();
 		similarities.putIfAbsent("DICE", Similarity.DICE);
-//		similarities.putIfAbsent("DICE", Similarity.VECTOR);
-//		similarities.putIfAbsent("DICE", Similarity.VECTORIDF);
-//		similarities.putIfAbsent("DICE", Similarity.VECTORIDF_NONORM);
+		similarities.putIfAbsent("VECTOR", Similarity.VECTOR);
+		similarities.putIfAbsent("VECTORIDF", Similarity.VECTORIDF);
+		similarities.putIfAbsent("VECTORIRD-NONORM", Similarity.VECTORIDF_NONORM);
 
 		se = new SearchEngineImpl();
 		see = new SearchEngineEvaluator(se);
 
-		result = new Double[10][10][1000][15];
 		queriesResults = new HashMap<Integer, Vector<RecallPrecisionPoint>>();
-		averagedQueries = new HashMap<Integer, Double>();
-		fileNameCtr = 0;
-		rppCtr = 0;
+		similarityResults = new HashMap<Integer, Double>();
+		fileResults = new HashMap<Integer, HashMap<Integer, Double>>();
 
 		wb = new XSSFWorkbook();
 		createHelper = wb.getCreationHelper();
 	}
 
+	/*
+	 * Export the current WorkBook object into an external XLS file
+	 */
 	private void produceXLSOutput() throws FileNotFoundException, IOException {
 		// Write the output to a file
 		FileOutputStream fileOut = new FileOutputStream("SearchEngineEvaluation.xlsx");
 		wb.write(fileOut);
 		fileOut.close(); // Closing the workbook workbook.close();
 	}
-	
-	/*
-	 * Adds sheet in workbook
-	 */
-	public static void fillSheet(HashMap<Integer, Double> pointsMap, Sheet s, String similarityType) throws IOException {
-		
 
+	/*
+	 * Fill one similarity with its value in a given sheet
+	 */
+	public void fillSheet(HashMap<Integer, Double> pointsMap, Sheet s, Integer similarityType) throws IOException {
+		// TODO
+		for (Entry<Integer, Double> file : pointsMap.entrySet()) {
+			s.getRow(file.getKey()+1).createCell(1 + similarityType).setCellValue(file.getValue());
+		}
 	}
 
 	/*
-	 * Adds sheet in workbook with the headers 
-	 * INPUT String sheetName name given to the sheet
+	 * Adds sheet in workbook with the headers INPUT String sheetName name given to
+	 * the sheet
 	 */
 	public Sheet createSheet(String sheetName) throws IOException {
 
@@ -104,7 +106,7 @@ public class GlobalEvaluationAndOutput {
 		for (String s1 : int11points) {
 			s.createRow(i1++).createCell(0).setCellValue(s1);
 		}
-		int i2 =0;
+		int i2 = 0;
 		for (String s2 : headers) {
 			s.getRow(0).createCell(i2).setCellValue(s2);
 			s.autoSizeColumn(i2++);
@@ -126,19 +128,19 @@ public class GlobalEvaluationAndOutput {
 		double lastValue = 0;
 
 		// Summing all values for each 0.1
-		for (Entry<Integer, Vector<RecallPrecisionPoint>> e : queriesResults.entrySet()) {
-			if (e.getValue() != null) {
+		for (Entry<Integer, Vector<RecallPrecisionPoint>> file : queriesResults.entrySet()) {
+			if (file.getValue() != null) {
 				queryCtr++;
 
 				// for each interpolated point
-				for (int ctr = 0; ctr < 10; ctr++) {
+				for (int ctr = 0; ctr < 11; ctr++) {
 					// If exists, add to current val
 					if (result.containsKey(ctr)) {
 						lastValue = result.get(ctr);
-						result.replace(ctr, lastValue + e.getValue().get(ctr).result());
+						result.replace(ctr, lastValue + file.getValue().get(ctr).result());
 					} else {
 						// else make first put
-						result.putIfAbsent(ctr, e.getValue().get(ctr).result());
+						result.putIfAbsent(ctr, file.getValue().get(ctr).result());
 					}
 				}
 			}
@@ -169,13 +171,19 @@ public class GlobalEvaluationAndOutput {
 		HashMap<Integer, Vector<RecallPrecisionPoint>> result;
 		result = new HashMap<Integer, Vector<RecallPrecisionPoint>>();
 
-		for (int qryNumber = 0; qryNumber <= eQryFile.getValue(); qryNumber++) {
+		for (int qryNumber = 1; qryNumber < eQryFile.getValue(); qryNumber++) {
 			if (result.containsKey(qryNumber)) {
 				System.err.println("Query number conflict for " + qryNumber + " : " + eQryFile.getKey());
 			}
 			result.putIfAbsent(qryNumber, see.evaluate11pt(qryNumber));
-		}
+			
+/*			if(result.containsKey(qryNumber)) {
+				if(result.get(qryNumber)!=null) {
+					System.out.println(result.get(qryNumber).size());
+				}
+			}*/
 
+		}
 		return result;
 	}
 
@@ -195,28 +203,48 @@ public class GlobalEvaluationAndOutput {
 		 * 
 		 * TODO NEED ONE MORE MAP <Similarity, Results>
 		 */
-		
+
 		GlobalEvaluationAndOutput mGEAO = new GlobalEvaluationAndOutput();
 
+		Sheet evalFileSheet;
+
 //FOR EACH FILE
-		for (Entry<String, Integer> e : filesQryNber.entrySet()) {
+		for (Entry<String, Integer> file : filesQryNber.entrySet()) {
 
 			// INITIALIZING FILE
-			databaseFilePath = "evaluation/" + e.getKey() + "/" + e.getKey() + ".trec";
-			queryFile = "evaluation/" + e.getKey() + "/" + e.getKey() + ".qry";
-			groundTruthFile = "evaluation/" + e.getKey() + "/" + e.getKey() + ".qrel";
+			databaseFilePath = "evaluation/" + file.getKey() + "/" + file.getKey() + ".trec";
+			queryFile = "evaluation/" + file.getKey() + "/" + file.getKey() + ".qry";
+			groundTruthFile = "evaluation/" + file.getKey() + "/" + file.getKey() + ".qrel";
 
 			se.loadDatabaseFile(databaseFilePath);
 			see.readGroundTruthFile(groundTruthFile);
 			see.readQueryFile(queryFile);
 
-			System.out.println("FILE Entered " + e.getKey());
+			System.out.println("FILE Entered " + file.getKey());
+
+			evalFileSheet = mGEAO.createSheet(file.getKey());
 
 			// FOR EACH SIMILARITY
 			for (Entry<String, Integer> similarity : similarities.entrySet()) {
-				mGEAO.createSheet("test");
-				mGEAO.produceXLSOutput();
+				se.setSimilarityType(similarity.getValue());
+				queriesResults = mGEAO.computeQueries(file);
+				if (!queriesResults.isEmpty()) {
+					similarityResults = mGEAO.averageQueries(queriesResults);
+					fileResults.put(similarity.getValue(),similarityResults);
+				} else {
+					System.err.println("QueriesResults empty");
+				}
+			}
+
+			// XLS OUTPUT
+			if (!fileResults.isEmpty()) {
+				for (Entry<Integer, HashMap<Integer, Double>> similarity : fileResults.entrySet()) {
+					mGEAO.fillSheet(similarity.getValue(), evalFileSheet, similarity.getKey());
+				}
 			}
 		}
+
+		mGEAO.produceXLSOutput();
+
 	}
 }
