@@ -33,6 +33,7 @@ public class GlobalEvaluationAndOutput {
 	static Double[][][][] result;
 	static HashMap<Integer, Vector<RecallPrecisionPoint>> queriesResults;
 	static HashMap<Integer, Double> averagedQueries;
+	static HashMap<Integer,HashMap<Integer, Double>> similarityResults;
 	static int fileNameCtr;
 	static int rppCtr;
 
@@ -43,7 +44,7 @@ public class GlobalEvaluationAndOutput {
 
 	public GlobalEvaluationAndOutput() {
 		filesQryNber = new HashMap<String, Integer>();
-		filesQryNber.putIfAbsent("cacm", 64);
+		filesQryNber.put("cacm", 64);
 // 		filesQryNber.putIfAbsent("cisi", 111);
 // 		filesQryNber.putIfAbsent("cran", 365);
 //		filesQryNber.putIfAbsent("lisa", 34);
@@ -69,36 +70,46 @@ public class GlobalEvaluationAndOutput {
 		createHelper = wb.getCreationHelper();
 	}
 
-	@SuppressWarnings("unused")
 	private void produceXLSOutput() throws FileNotFoundException, IOException {
 		// Write the output to a file
 		FileOutputStream fileOut = new FileOutputStream("SearchEngineEvaluation.xlsx");
 		wb.write(fileOut);
 		fileOut.close(); // Closing the workbook workbook.close();
 	}
+	
+	/*
+	 * Adds sheet in workbook
+	 */
+	public static void fillSheet(HashMap<Integer, Double> pointsMap, Sheet s, String similarityType) throws IOException {
+		
 
-	public void createAndFillSheet(HashMap<Integer, Double> pointsMap, String sheetName) throws IOException {
+	}
+
+	/*
+	 * Adds sheet in workbook with the headers 
+	 * INPUT String sheetName name given to the sheet
+	 */
+	public Sheet createSheet(String sheetName) throws IOException {
 
 		Sheet s = wb.createSheet(sheetName);
 
 		// HEARDERS
-			//First Row
+		// First Row
 		String[] int11points = { "0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1" };
-			//First column
-		String[] headers = { "Interpolated point", "DICE", "VECTOR", "VECTOR IDF","VECTOR IDF NO NORM" };
+		// First column
+		String[] headers = { "Interpolated point", "DICE", "VECTOR", "VECTOR IDF", "VECTOR IDF NO NORM" };
 
-		//TODO ADAPT
-		int i1 = 0;
+		int i1 = 1;
 		s.createRow(0);
 		for (String s1 : int11points) {
 			s.createRow(i1++).createCell(0).setCellValue(s1);
 		}
-		int i2 = 0;
+		int i2 =0;
 		for (String s2 : headers) {
 			s.getRow(0).createCell(i2).setCellValue(s2);
 			s.autoSizeColumn(i2++);
 		}
-
+		return s;
 	}
 
 	/*
@@ -179,14 +190,13 @@ public class GlobalEvaluationAndOutput {
 		// averages -> do not count null answers
 ///////////////////////////////////PROGRAM GUIDELINE////////////////////////////////////
 		/*
-		 * Create WorkBook 
-		 * For each file 
-		 * For each similarity type 
-		 * Create Sheet
+		 * Create WorkBook For each file For each similarity type Create Sheet
 		 * "File-Similarity type" compute queries average queries output in XLS sheet
 		 * 
 		 * TODO NEED ONE MORE MAP <Similarity, Results>
 		 */
+		
+		GlobalEvaluationAndOutput mGEAO = new GlobalEvaluationAndOutput();
 
 //FOR EACH FILE
 		for (Entry<String, Integer> e : filesQryNber.entrySet()) {
@@ -204,65 +214,9 @@ public class GlobalEvaluationAndOutput {
 
 			// FOR EACH SIMILARITY
 			for (Entry<String, Integer> similarity : similarities.entrySet()) {
-				System.out.println("	Similarity Entered " + similarity.getValue());
-
-				// Adjust similarity type parameter
-				se.setSimilarityType(similarity.getValue());
-
-				// FOR EACH QRY
-				for (int iQry = 1; iQry <= e.getValue(); iQry++) {
-					System.out.println("		Query Entered " + iQry + " out of " + e.getValue());
-
-					// Calculate similarity
-					for (rppCtr = 0; rppCtr < 11; rppCtr++) {
-
-						if (see.evaluate11pt(iQry) != null) {
-							if (!see.evaluate11pt(iQry).isEmpty()) {
-								queriesResults.put(iQry, see.evaluate11pt(iQry));
-								// result[fileNameCtr][similarity][iQry][rppCtr]=
-								// see.evaluate11pt(iQry).get(rppCtr).recall/see.evaluate11pt(iQry).get(rppCtr).precision;
-							}
-						}
-					}
-
-					// Change l-5 to break two dimensions and assign value here
-					// result[fileNameCtr][similarity] = average<iQry,rppCtr>;
-				}
-
-				// Average the queries for a similarity
-				HashMap<Integer, Double> tempResults = new HashMap<Integer, Double>();
-				Double tempValue = 0.0;
-				// FOR EACH QUERY
-				for (Entry<Integer, Vector<RecallPrecisionPoint>> e1 : queriesResults.entrySet()) {
-					// FOR EACH RPP
-					// SUM
-					int ctr = 0;
-					for (RecallPrecisionPoint rpp : e1.getValue()) {
-						// ADD IT TO GLOBAL QUERY RESULTS
-						if (tempResults.containsKey(ctr)) {
-							// TODO RESULTS GIVES BACK INFINITY IF VALUES ARE 0's
-							tempResults.replace(ctr, tempResults.get(ctr) + rpp.result());
-						}
-						tempResults.putIfAbsent(ctr, rpp.result());
-						ctr++;
-					}
-				}
-				// DIVIDE BY QRY NUMBER
-				for (Entry<Integer, Double> e2 : tempResults.entrySet()) {
-					System.out.println(e2.getKey() + " : " + e2.getValue());
-				}
-
-				for (Entry<Integer, Double> e2 : tempResults.entrySet()) {
-					tempValue = e2.getValue();
-					tempResults.replace(e2.getKey(), tempValue / e.getValue());
-
-					// DISPLAY RESULTS
-					System.out.println(e2.getKey() + " : " + e2.getValue());
-				}
-				System.out.println(tempResults.size());
-
+				mGEAO.createSheet("test");
+				mGEAO.produceXLSOutput();
 			}
 		}
-
 	}
 }
