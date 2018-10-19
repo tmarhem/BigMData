@@ -49,7 +49,7 @@ public class SearchEngineImpl extends SearchEngine {
 	
 	public SearchEngineImpl() {
 		similarityType = Similarity.DICE;
-		this.database = new Vector<DocumentInfo>();
+		database = new Vector<DocumentInfo>();
 
 		regex = " ,.;:()'\"<>";
 		myTokens = null;
@@ -65,7 +65,23 @@ public class SearchEngineImpl extends SearchEngine {
 		queryWordBag = null;
 	}
 
+	public void resetDB() {
+		database = new Vector<DocumentInfo>();
 
+		regex = " ,.;:()'\"<>";
+		myTokens = null;
+		myQuery = null;
+		myTokenizer = new Tokenizer(regex);
+		enStopList = new StopList(ENSTOP);
+		myStemmer = new Stemmer(Stemmer.StemmerLanguage.ENGLISH);
+		myVocabulary = new Vocabulary();
+
+		index = new HashMap<Integer, WordBag>();
+		invertedIndex = new HashMap<String, ArrayList<Integer>>();
+
+		queryWordBag = null;
+	}
+	
 	@Override
 	public void indexDatabase() {
 
@@ -148,6 +164,7 @@ public class SearchEngineImpl extends SearchEngine {
 	 */
 	public Vector<DocumentInfo> querrySimilarity() {
 
+		DocumentInfo tempVector = new DocumentInfo();
 		Vector<DocumentInfo> results = new Vector<DocumentInfo>();
 		TreeMap<Double, Integer> preResults = new TreeMap<Double, Integer>();
 
@@ -165,7 +182,8 @@ public class SearchEngineImpl extends SearchEngine {
 			// treeMAp
 
 			for (Entry<Double, Integer> e : preResults.entrySet()) {
-				results.add(database.get(e.getValue()));
+				tempVector = database.get(e.getValue());
+				results.add(tempVector);
 				//System.out.println(e.getValue() + " has pertinence score of " + e.getKey());
 			}
 

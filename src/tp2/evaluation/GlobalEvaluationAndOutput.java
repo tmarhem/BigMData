@@ -45,10 +45,12 @@ public class GlobalEvaluationAndOutput {
 	public GlobalEvaluationAndOutput() {
 		filesQryNber = new HashMap<String, Integer>();
 		filesQryNber.put("cacm", 64);
-// 		filesQryNber.putIfAbsent("cisi", 111);
-// 		filesQryNber.putIfAbsent("cran", 365);
+ 		filesQryNber.putIfAbsent("cisi", 111);
+		filesQryNber.putIfAbsent("med", 30);
+
+		//NOT WORKING
+//		filesQryNber.putIfAbsent("cran", 365);
 //		filesQryNber.putIfAbsent("lisa", 34);
-//		filesQryNber.putIfAbsent("med", 30);
 //		filesQryNber.putIfAbsent("time", 82);
 
 		similarities = new HashMap<String, Integer>();
@@ -195,16 +197,6 @@ public class GlobalEvaluationAndOutput {
 		 * the excel outputs
 		 */
 
-		// TODO WARNING some of the requests answers may be faulty and crush the
-		// averages -> do not count null answers
-///////////////////////////////////PROGRAM GUIDELINE////////////////////////////////////
-		/*
-		 * Create WorkBook For each file For each similarity type Create Sheet
-		 * "File-Similarity type" compute queries average queries output in XLS sheet
-		 * 
-		 * TODO REVERSE VECTOR GAUCHE DROITE resultats de 0 à 1 a l'envers
-		 */
-
 		GlobalEvaluationAndOutput mGEAO = new GlobalEvaluationAndOutput();
 
 		Sheet evalFileSheet;
@@ -212,6 +204,8 @@ public class GlobalEvaluationAndOutput {
 //FOR EACH FILE
 		for (Entry<String, Integer> file : filesQryNber.entrySet()) {
 
+			se.resetDB();
+			see=new SearchEngineEvaluator(se);
 			// INITIALIZING FILE
 			databaseFilePath = "evaluation/" + file.getKey() + "/" + file.getKey() + ".trec";
 			queryFile = "evaluation/" + file.getKey() + "/" + file.getKey() + ".qry";
