@@ -391,6 +391,5 @@ public class SearchEngineEvaluator {
 	// groundtruth_file
 	public static void main(String[] args) throws IOException {
 
-		
-
+ 
 }}

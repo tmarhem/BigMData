@@ -3,6 +3,7 @@ package tp2.evaluation;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -130,6 +131,8 @@ public class GlobalEvaluationAndOutput {
 		// Summing all values for each 0.1
 		for (Entry<Integer, Vector<RecallPrecisionPoint>> file : queriesResults.entrySet()) {
 			if (file.getValue() != null) {
+				Collections.reverse(file.getValue());
+
 				queryCtr++;
 
 				// for each interpolated point
