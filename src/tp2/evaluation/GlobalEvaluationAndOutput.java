@@ -131,8 +131,6 @@ public class GlobalEvaluationAndOutput {
 		// Summing all values for each 0.1
 		for (Entry<Integer, Vector<RecallPrecisionPoint>> file : queriesResults.entrySet()) {
 			if (file.getValue() != null) {
-				Collections.reverse(file.getValue());
-
 				queryCtr++;
 
 				// for each interpolated point
@@ -140,10 +138,10 @@ public class GlobalEvaluationAndOutput {
 					// If exists, add to current val
 					if (result.containsKey(ctr)) {
 						lastValue = result.get(ctr);
-						result.replace(ctr, lastValue + file.getValue().get(ctr).result());
+						result.replace(ctr, lastValue + file.getValue().get(ctr).precision);
 					} else {
 						// else make first put
-						result.putIfAbsent(ctr, file.getValue().get(ctr).result());
+						result.putIfAbsent(ctr, file.getValue().get(ctr).precision);
 					}
 				}
 			}

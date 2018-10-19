@@ -70,13 +70,6 @@ public class SearchEngineEvaluator {
 			this.precision = precision;
 		}
 
-		public Double result() {
-			if(recall==0 || precision==0) {
-				return 0.0;
-			} else {
-				return this.recall / this.precision;
-			}
-		}
 
 		@Override
 		public String toString() {
